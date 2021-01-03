@@ -21,7 +21,7 @@
 
 #include <stdbool.h>
 #include <string.h>
-#include "cJSON.h"
+#include <cJSON.h>
 
 /**
  * This is hardly a complete implementation of jsonrpc.

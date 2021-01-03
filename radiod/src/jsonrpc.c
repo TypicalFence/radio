@@ -19,7 +19,6 @@
 #include "jsonrpc.h"
 #include "log.h"
 
-
 static bool has_version_attr(cJSON *json) {
     cJSON *jsonrpc = cJSON_GetObjectItemCaseSensitive(json, "jsonrpc");
 
