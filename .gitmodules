@@ -1,3 +1,6 @@
 [submodule "radiod/vendor/cJSON"]
 	path = radiod/vendor/cJSON
 	url = https://github.com/DaveGamble/cJSON.git
+[submodule "radiod/vendor/iniparser"]
+	path = radiod/vendor/iniparser
+	url = https://github.com/ndevilla/iniparser.git

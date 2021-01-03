@@ -17,11 +17,16 @@
  */
 
 #define LOG_USE_COLOR 
+
 #include "log.h"
+#include "config.h"
 #include "socket.h"
 
+Config config;
+
 int main() {
-    socket_init();
+    config = load_config();
+    socket_init(config.socket_port);
     socket_listen();
     return 0;
 }

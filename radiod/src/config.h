@@ -1,6 +1,6 @@
 /*
  * This file is part of RadioD.
- * Copyright (C) 2020 fence.
+ * Copyright (C) 2021 fence.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,10 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SOCKET_H
-#define SOCKET_H
+#ifndef CONFIG_H
+#define CONFIG_H
 
-int socket_init(int port);
-int socket_listen();
+#include <iniparser.h>
+
+#define CONFIG_PATH "/etc/radiod"
+#define DEFAULT_SOCKET_PORT 8069
+
+typedef struct {
+    int socket_port;
+} Config;
+
+Config load_config();
 
 #endif
+

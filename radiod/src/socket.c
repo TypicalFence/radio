@@ -34,7 +34,7 @@ int sock;
 char buffer[BUF_SIZE];
 int rec_value, length;
 
-int socket_init() {
+int socket_init(int port) {
     struct sockaddr_in addr;
     sock = socket(AF_INET, SOCK_STREAM, 0);
     
@@ -45,7 +45,7 @@ int socket_init() {
 
     addr.sin_family = AF_INET;
     addr.sin_addr.s_addr = INADDR_ANY;
-    addr.sin_port = htons(DEFAULT_PORT);
+    addr.sin_port = htons(port);
     
     if(bind(sock, &addr, sizeof(struct sockaddr_in))) {
         log_error("can not bind socket");

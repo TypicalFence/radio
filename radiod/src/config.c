@@ -1,6 +1,6 @@
 /*
  * This file is part of RadioD.
- * Copyright (C) 2020 fence.
+ * Copyright (C) 2021 fence.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,10 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SOCKET_H
-#define SOCKET_H
+#include "./config.h"
 
-int socket_init(int port);
-int socket_listen();
+Config load_config() {
+    Config config;
+    dictionary *daemon_ini = iniparser_load(CONFIG_PATH "/daemon.ini");
+    
+    config.socket_port = iniparser_getint(daemon_ini, "socket:port", DEFAULT_SOCKET_PORT);
 
-#endif
+    iniparser_freedict(daemon_ini);
+    return config;
+}
