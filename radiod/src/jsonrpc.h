@@ -54,6 +54,6 @@ typedef struct {
  *     - 2 rpc response
  */
 int check_rpc_string(); 
-Request parse_request();
+Request parse_request(char *string);
 
 #endif

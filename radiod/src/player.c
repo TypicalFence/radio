@@ -16,38 +16,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-#include "log.h"
-#include "config.h"
-#include "socket.h"
-#include "stations.h"
 #include "player.h"
 
-RadioStation *station;
+#include <stdlib.h>
+#include <mpv/client.h>
 
-int main() {
-    load_config();
-    init_stations();
-    init_player();
+#include "stations.h"
 
-    station = get_station("cyberia");
-    log_info(station->name);
+static char *current_station = NULL;
+static mpv_handle *mpv; 
 
-    station = get_station("plazaone");
-    log_info(station->name);
-    
-    RadioStation **my_stations = get_stations();
-    log_info("%i", get_station_count()); 
-    for(int i = 0; i < get_station_count(); i++) {
-        log_info(my_stations[i]->name);
+static void play_stream() {
+    RadioStation *station = get_station(current_station);
+
+    if (station != NULL) {
+        const char *cmd[] = {"loadfile", station->stream_url, NULL};
+        mpv_command(mpv, cmd);
     }
+}
 
-    int socket_status = socket_init();
+void init_player() {
+    mpv = mpv_create();
+    mpv_set_option_string(mpv, "vid", "no");
+    mpv_initialize(mpv);
+}
 
-    if (socket_status == 0) {
-        socket_listen();
-        return 0;
-    }
+PlayerState player_get_state() {
+    PlayerState state;
+    state.current_station = current_station;
+    return state;
+}
 
-    return 1;
+void player_switch_station(char *id) {
+    current_station = id;
+    play_stream();
 }

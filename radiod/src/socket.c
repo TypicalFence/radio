@@ -28,9 +28,6 @@
 #include "log.h"
 #include "rpc.h"
 
-#define DEFAULT_PORT 8069
-
-
 int sock;
 char buffer[BUF_SIZE];
 int rec_value, length;
@@ -72,7 +69,7 @@ static int socket_handle_client() {
             printf("fug :DDDD");
             exit(1);
         } else {
-            realloc(message, strlen(message) + strlen(buffer));
+            message = realloc(message, strlen(message) + strlen(buffer));
             log_debug(buffer);
             strcat(message, buffer);
             bytesRead += rec_value;
@@ -89,8 +86,9 @@ static int socket_handle_client() {
 }
 
 int socket_listen() {
+    log_info("listening on port: %i", config.socket_port);
+    
     while(true) {
-        log_info("listening on port: %i", config.socket_port);
         socket_handle_client();
     }
 }

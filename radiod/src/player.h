@@ -1,6 +1,6 @@
 /*
  * This file is part of RadioD.
- * Copyright (C) 2020 fence.
+ * Copyright (C) 2021 fence.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,33 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "rpc.h"
+#ifndef PLAYER_H
+#define PLAYER_H 
 
-#include <string.h>
+#include <stdbool.h>
 
-#include "jsonrpc.h"
-#include "player.h"
+typedef struct {
+    char *current_station;
+} PlayerState;
 
-char *handle_request(char *string) {
-    int msg_type = check_rpc_string(string);
+void init_player();
+PlayerState player_get_state();
+void player_switch_station(char *id);
 
-    if (msg_type != 1) {
-        return "no";
-    }
-    
-    Request request = parse_request(string);
-
-    if (strcmp(request.method, "swtich_station") == 0) {
-        log_debug("switch_station called");
-        cJSON *id_json = cJSON_GetObjectItemCaseSensitive(&request.params, "id");
-
-        if (id_json) {
-            char *id = id_json->valuestring; 
-            player_switch_station(id);
-        }
-    }
-
-
-    return "yes";
-}
-
+#endif

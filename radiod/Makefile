@@ -14,7 +14,7 @@ LIB_INCLUDE := -I ./vendor/cJSON -I ./vendor/iniparser/src
 default: radiod
 
 radiod: $(OBJECTS) $(LIBS)
-	$(LD) $(LDFLAGS) -o radiod $^
+	$(LD) $(LDFLAGS) -o radiod $^ -lmpv
 
 $(OBJECTS): ./build/%.o: ./src/%.c
 	mkdir -p $(@D)
