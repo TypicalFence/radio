@@ -16,25 +16,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "socket.h"
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include "config.h"
 #include "log.h"
 #include "rpc.h"
 
-
 #define DEFAULT_PORT 8069
-#define MAX_QUEUE 1
-#define BUF_SIZE 1024
+
 
 int sock;
 char buffer[BUF_SIZE];
 int rec_value, length;
 
-int socket_init(int port) {
+int socket_init() {
     struct sockaddr_in addr;
     sock = socket(AF_INET, SOCK_STREAM, 0);
     
@@ -45,7 +46,7 @@ int socket_init(int port) {
 
     addr.sin_family = AF_INET;
     addr.sin_addr.s_addr = INADDR_ANY;
-    addr.sin_port = htons(port);
+    addr.sin_port = htons(config.socket_port);
     
     if(bind(sock, &addr, sizeof(struct sockaddr_in))) {
         log_error("can not bind socket");
@@ -89,6 +90,7 @@ static int socket_handle_client() {
 
 int socket_listen() {
     while(true) {
+        log_info("listening on port: %i", config.socket_port);
         socket_handle_client();
     }
 }

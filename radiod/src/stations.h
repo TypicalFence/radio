@@ -15,20 +15,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-#ifndef CONFIG_H
-#define CONFIG_H
-
-
-#define CONFIG_PATH "/etc/radiod"
-#define DEFAULT_SOCKET_PORT 8069
+#ifndef STATIONS_H
+#define STATIONS_H
 
 typedef struct {
-    int socket_port;
-} Config;
+    char *id;
+    char *name;
+    char *stream_url;
+} RadioStation; 
 
-void load_config();
+void init_stations();
+RadioStation *get_station();
+//RadioStation *get_stations();
+//int *get_station_count();
 
-extern Config config;
 #endif
 

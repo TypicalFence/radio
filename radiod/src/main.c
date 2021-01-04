@@ -1,6 +1,6 @@
 /*
  * This file is part of RadioD.
- * Copyright (C) 2020 fence.
+ * Copyright (C) 2021 fence.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,17 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define LOG_USE_COLOR 
 
 #include "log.h"
 #include "config.h"
 #include "socket.h"
+#include "stations.h"
 
-Config config;
+RadioStation *station;
 
 int main() {
-    config = load_config();
-    socket_init(config.socket_port);
+    load_config();
+    init_stations();
+        
+    station = get_station("cyberia");
+    log_info(station->stream_url);
+    station = get_station("cyberradiopw");
+    log_info(station->stream_url);
+
+    socket_init();
     socket_listen();
     return 0;
 }

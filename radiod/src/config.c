@@ -17,13 +17,14 @@
  */
 
 #include "./config.h"
+#include <iniparser.h>
 
-Config load_config() {
-    Config config;
+Config config;
+
+void load_config() {
     dictionary *daemon_ini = iniparser_load(CONFIG_PATH "/daemon.ini");
     
     config.socket_port = iniparser_getint(daemon_ini, "socket:port", DEFAULT_SOCKET_PORT);
 
     iniparser_freedict(daemon_ini);
-    return config;
 }

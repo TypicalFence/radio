@@ -19,7 +19,10 @@
 #ifndef SOCKET_H
 #define SOCKET_H
 
-int socket_init(int port);
+#define MAX_QUEUE 1
+#define BUF_SIZE 1024
+
+int socket_init();
 int socket_listen();
 
 #endif
