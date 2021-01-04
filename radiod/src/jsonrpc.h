@@ -36,13 +36,13 @@
 typedef struct {
     char* id;
     char* method;
-    cJSON params;
+    cJSON* params;
 } Request;
 
 typedef struct {
     char* id;
     char* method;
-    cJSON result;
+    cJSON* result;
 } Response;
 
 

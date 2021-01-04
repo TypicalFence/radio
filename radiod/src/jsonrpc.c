@@ -39,6 +39,7 @@ static bool has_result_attr(cJSON *json) {
     return result != NULL;
 }
 
+// TODO check for method attribute
 int check_rpc_string(char *string) {
     cJSON *json = cJSON_Parse(string);    
 
@@ -60,10 +61,24 @@ int check_rpc_string(char *string) {
     return 0;
 }
 
-
+// TODO makes this return a pointer
+// return Null on failure
 Request parse_request(char *string) {
     cJSON *json = cJSON_Parse(string);
     Request request;
     
+    cJSON *method = cJSON_GetObjectItemCaseSensitive(json, "method");
+    request.method = malloc(strlen(method->valuestring));
+    strcpy(request.method, method->valuestring);
+    
+    cJSON *id = cJSON_GetObjectItemCaseSensitive(json, "id");
+    request.id = malloc(strlen(id->valuestring));
+    strcpy(request.id, id->valuestring);
+
+
+    // I think this leaks memory, look into cloning that json
+    cJSON *params = cJSON_GetObjectItemCaseSensitive(json, "params");
+    request.params = params;
+
     return request;
 }

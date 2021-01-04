@@ -10,7 +10,8 @@
         (lambda (method params) 
           (make-jsonrpc-request (uuid-string) method params)))
 
-(define playRequest (make-request "switch_station" (hash 'id "plazaone")))
+;(define playRequest (make-request "switch_station" (hash 'id "plazaone")))
+(define playRequest (make-request "switch_station" (hash 'id "cyberia")))
 
 (define-values (in out) (tcp-connect "localhost" 8069))
 (display playRequest out)

@@ -32,16 +32,15 @@ char *handle_request(char *string) {
     
     Request request = parse_request(string);
 
-    if (strcmp(request.method, "swtich_station") == 0) {
+    if (strcmp(request.method, "switch_station") == 0) {
         log_debug("switch_station called");
-        cJSON *id_json = cJSON_GetObjectItemCaseSensitive(&request.params, "id");
+        cJSON *id_json = cJSON_GetObjectItemCaseSensitive(request.params, "id");
 
         if (id_json) {
             char *id = id_json->valuestring; 
             player_switch_station(id);
         }
     }
-
 
     return "yes";
 }
