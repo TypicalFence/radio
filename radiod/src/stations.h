@@ -26,8 +26,8 @@ typedef struct {
 
 void init_stations();
 RadioStation *get_station();
-//RadioStation *get_stations();
-//int *get_station_count();
+RadioStation **get_stations();
+int get_station_count();
 
 #endif
 

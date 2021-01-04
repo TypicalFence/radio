@@ -49,7 +49,7 @@ int socket_init() {
     addr.sin_port = htons(config.socket_port);
     
     if(bind(sock, &addr, sizeof(struct sockaddr_in))) {
-        log_error("can not bind socket");
+        log_error("can not bind socket on port: %i", config.socket_port);
         return 1;
     }
 

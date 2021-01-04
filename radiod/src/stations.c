@@ -43,6 +43,8 @@ typedef struct {
 
 typedef struct {
     TableItem **items;
+    char **keys;
+    int count;
 } StationTable;
 
 static StationTable *stations;
@@ -99,7 +101,7 @@ void set_station(RadioStation *station) {
 
     if (item == NULL) {
         stations->items[slot] = new_table_item(station);
-        return;
+        goto end;
     }
     
     // handle colisions
@@ -110,7 +112,7 @@ void set_station(RadioStation *station) {
             // replace value
             free(item->value);
             item->value = copy_station(station);
-            return;
+            goto end;
         }
 
         prev = item;
@@ -119,8 +121,19 @@ void set_station(RadioStation *station) {
     
     // add new
     item->next = new_table_item(station);
-};
 
+    // update keys and count
+    end:
+        track_keys(station->id);
+    };
+
+void track_keys(char *new_key) {
+    char **keys = realloc(stations->keys, sizeof(char *) * stations->count + 1);
+    keys[stations->count] = malloc(strlen(new_key) + 1);
+    strcpy(keys[stations->count], new_key); 
+    stations->keys = keys;
+    stations->count = stations->count + 1;
+}
 
 void load_stations_from_config() {
     dictionary *stations = iniparser_load(CONFIG_PATH "/stations.ini");
@@ -177,7 +190,9 @@ void load_stations_from_config() {
 void init_stations() {
     stations = malloc(sizeof(StationTable) * 1);
     stations->items = malloc(sizeof(TableItem*) * TABLE_SIZE);
-
+    stations->keys = malloc(sizeof(char*) * 1);
+    stations->count = 0;
+    
     for (int i = 0; i < TABLE_SIZE; ++i) {
         stations->items[i] = NULL;
     }
@@ -206,9 +221,19 @@ RadioStation *get_station(char *id) {
     return NULL;
 }
 
+RadioStation **get_stations() {
+    RadioStation **station_array = malloc(sizeof(RadioStation *) * stations->count);
 
-//static load_stations
+    for(int i = 0; i < stations->count; i++) {
+        log_debug(stations->keys[i]);
+        station_array[i] = get_station(stations->keys[i]);
+        log_debug(station_array[i]->name);
+    }
 
-//RadioStation *get_stations(); 
-//int *get_station_count();
+    return station_array;
+}
+
+int get_station_count() {
+    return stations->count;
+};
 

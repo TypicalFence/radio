@@ -29,11 +29,23 @@ int main() {
     init_stations();
         
     station = get_station("cyberia");
-    log_info(station->stream_url);
-    station = get_station("cyberradiopw");
-    log_info(station->stream_url);
+    log_info(station->name);
 
-    socket_init();
-    socket_listen();
-    return 0;
+    station = get_station("plazaone");
+    log_info(station->name);
+    
+    RadioStation **my_stations = get_stations();
+    log_info("%i", get_station_count()); 
+    for(int i = 0; i < get_station_count(); i++) {
+        log_info(my_stations[i]->name);
+    }
+
+    int socket_status = socket_init();
+
+    if (socket_status == 0) {
+        socket_listen();
+        return 0;
+    }
+
+    return 1;
 }
