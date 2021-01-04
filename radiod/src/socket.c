@@ -63,16 +63,29 @@ static int socket_handle_client() {
 
     int bytesRead = 0;
     char *message = malloc(BUF_SIZE);
-    
+    // ensure that message is an empty string
+    // when using malloc there might be random garbage in the memory already
+    message[0] = '\0';
+
     while (rec_value=read(temp_sock, buffer, BUF_SIZE)) {
         if(rec_value < 0) {
             printf("fug :DDDD");
             exit(1);
         } else {
-            message = realloc(message, strlen(message) + strlen(buffer));
-            log_debug(buffer);
+            message = realloc(message, strlen(message) + BUF_SIZE);
+            
+            // for reason read will always put a space at the end
+            // maybe the space comes from somewhere else
+            // but I have absolutely no clue where
+            // either way just setting the last element to NULL works :3
+            buffer[BUF_SIZE] = NULL;
+            log_debug("%i", strlen(buffer));
+            log_debug("$%s$", buffer);
             strcat(message, buffer);
             bytesRead += rec_value;
+
+            // clear buffer
+            memset(buffer, 0, BUF_SIZE);
         }
     }
     

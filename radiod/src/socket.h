@@ -20,7 +20,7 @@
 #define SOCKET_H
 
 #define MAX_QUEUE 1
-#define BUF_SIZE 1024
+#define BUF_SIZE 32
 
 int socket_init();
 int socket_listen();
