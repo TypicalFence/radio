@@ -19,9 +19,39 @@
 #ifndef RPC_H
 #define RPC_H
 
-#include "jsonrpc.h"
-#include "log.h"
+#include <cJSON.h>
 
+/**
+ * This is hardly a complete implementation of jsonrpc.
+ * it assumes some things, but it should be mostly compliant.
+ * I am lazy and C is to hard for this, so yeah.
+ * 
+ * Assumtaions:
+ * - We only support 2.0
+ * - We assume id to be a string, for simplicity.  
+ */
+
+typedef struct {
+    char* id;
+    char* method;
+    cJSON* params;
+} Request;
+
+typedef struct {
+    char* id;
+    char* method;
+    cJSON* result;
+} Response;
+
+/**
+ * Checks if a given string is a valid rpc message.
+ * Returns:
+ *     - 0 not a rpc message
+ *     - 1 rpc request
+ *     - 2 rpc response
+ */
+int check_rpc_string(); 
+Request parse_request(char *string);
 char *handle_request(char *);
 
 #endif
