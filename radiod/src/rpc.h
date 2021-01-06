@@ -30,7 +30,6 @@
  * - We only support 2.0
  * - We assume id to be a string, for simplicity.  
  */
-
 typedef struct {
     char* id;
     char* method;
@@ -41,6 +40,7 @@ typedef struct {
     char* id;
     char* method;
     cJSON* result;
+    cJSON* error;
 } Response;
 
 /**
@@ -52,6 +52,8 @@ typedef struct {
  */
 int check_rpc_string(); 
 Request parse_request(char *string);
+cJSON *create_error(int code, char *message, cJSON *data); 
+char *encode_response(Response *resp);
 char *handle_request(char *);
 
 #endif

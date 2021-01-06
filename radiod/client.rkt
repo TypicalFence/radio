@@ -16,3 +16,5 @@
 (define-values (in out) (tcp-connect "localhost" 8069))
 (display playRequest out)
 (flush-output out)
+(close-output-port out)
+(read-json in)

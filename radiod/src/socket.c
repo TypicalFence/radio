@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 #include "config.h"
 #include "log.h"
 #include "rpc.h"
@@ -79,7 +80,6 @@ static int socket_handle_client() {
             // but I have absolutely no clue where
             // either way just setting the last element to NULL works :3
             buffer[BUF_SIZE] = NULL;
-            log_debug("%i", strlen(buffer));
             log_debug("$%s$", buffer);
             strcat(message, buffer);
             bytesRead += rec_value;
@@ -90,11 +90,14 @@ static int socket_handle_client() {
     }
     
     log_info(message);
-    log_info(handle_request(message)); 
-    free(message);
+    char *response = handle_request(message);
+    log_info(response);
+    send(temp_sock, response, strlen(response), 0);
 
     log_info("Ending connection.");
     close(temp_sock);
+    free(message);
+    free(response);
     return 0;
 }
 
