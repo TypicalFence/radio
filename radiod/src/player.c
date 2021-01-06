@@ -19,6 +19,7 @@
 #include "player.h"
 
 #include <stdlib.h>
+#include <string.h>
 #include <mpv/client.h>
 
 #include "stations.h"
@@ -35,6 +36,11 @@ static void play_stream() {
     }
 }
 
+void player_stop() {
+    const char *cmd[] = {"playlist-remove", "0", NULL};
+    mpv_command(mpv, cmd);
+}
+
 void init_player() {
     mpv = mpv_create();
     mpv_set_option_string(mpv, "vid", "no");
@@ -44,10 +50,31 @@ void init_player() {
 PlayerState player_get_state() {
     PlayerState state;
     state.current_station = current_station;
+    state.playing = player_is_playing();
     return state;
 }
 
-void player_switch_station(char *id) {
-    current_station = id;
-    play_stream();
+bool player_switch_station(char *id) {
+    RadioStation *station = get_station(id);
+
+    if (station != NULL) {
+        current_station = id;
+        play_stream();
+        return true;
+    }
+
+    return false;
 }
+
+bool player_is_playing() {
+    char *idle = mpv_get_property_string(mpv, "core-idle");
+    return strcmp(idle, "yes") != 0;
+}
+
+SongInfo player_currently_playing() {
+    SongInfo info;
+    info.artist = mpv_get_property_string(mpv, "metadata/by-key/artist");
+    info.title = mpv_get_property_string(mpv, "metadata/by-key/title");
+    return info;
+}
+

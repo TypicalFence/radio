@@ -23,10 +23,19 @@
 
 typedef struct {
     char *current_station;
+    bool playing;
 } PlayerState;
 
+typedef struct {
+    char *artist;
+    char *title;
+} SongInfo;
+
 void init_player();
+void player_stop();
 PlayerState player_get_state();
-void player_switch_station(char *id);
+bool player_switch_station(char *id);
+bool player_is_playing();
+SongInfo player_currently_playing();
 
 #endif

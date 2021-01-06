@@ -26,8 +26,6 @@
 
 static char *method_switch_station(Request *req) {
     Response response;
-    char *result;
-
     log_debug("switch_station called");
 
     response.id = req->id;
@@ -45,10 +43,83 @@ static char *method_switch_station(Request *req) {
         response.error = create_error(400, "no id in params", NULL);
     }
 
+    return encode_response(&response);
+}
+
+
+static char *method_stop(Request *req) {
+    Response response;
+    log_debug("stop called");
+    
+    response.id = req->id;
+    response.method = "stop";
+    response.result = cJSON_CreateString("ok");
+    response.error = NULL;
+    
+    player_stop();
 
     return encode_response(&response);
 }
 
+static char *method_player_state(Request *req) {
+    Response response;
+    log_debug("player_state_called");
+    
+    response.id = req->id;
+    response.method = "player_state";
+    response.result = NULL;
+    response.error = NULL;
+    
+    PlayerState state = player_get_state();
+
+    response.result = cJSON_CreateObject();
+    cJSON *station;
+
+    if (state.current_station == NULL) {
+        station = cJSON_CreateNull();
+    } else {
+        cJSON_CreateString(state.current_station);
+    }
+
+    cJSON_AddItemToObject(
+        response.result, 
+        "current_station",
+        station
+    );
+    cJSON_AddItemToObject(
+        response.result, 
+        "is_playing", 
+        cJSON_CreateBool(state.playing)
+    );
+
+    return encode_response(&response);
+}
+
+static char *method_current_song(Request *req) {
+    Response response;
+    log_debug("current_song called");
+    
+    response.id = req->id;
+    response.method = "current_song";
+    response.result = NULL;
+    response.error = NULL;
+    
+    SongInfo song = player_currently_playing();
+
+    response.result = cJSON_CreateObject();
+    cJSON_AddItemToObject(
+        response.result, 
+        "artist", 
+        cJSON_CreateString(song.artist)
+    );
+    cJSON_AddItemToObject(
+        response.result, 
+        "title",
+        cJSON_CreateString(song.title)
+    );
+
+    return encode_response(&response);
+}
 
 char *handle_request(char *string) {
     int msg_type = check_rpc_string(string);
@@ -67,6 +138,18 @@ char *handle_request(char *string) {
     
     if (strcmp(request.method, "switch_station") == 0) {
         return method_switch_station(&request);
+    }
+
+    if (strcmp(request.method, "stop") == 0) {
+        return method_stop(&request);
+    }
+
+    if (strcmp(request.method, "current_song") == 0) {
+        return method_current_song(&request);
+    }
+
+    if (strcmp(request.method, "player_state") == 0) {
+        return method_player_state(&request);
     }
     
     // send not found

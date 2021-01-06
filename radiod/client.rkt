@@ -12,9 +12,12 @@
 
 ;(define playRequest (make-request "switch_station" (hash 'id "plazaone")))
 (define playRequest (make-request "switch_station" (hash 'id "cyberia")))
+(define stopRequest (make-request "stop" 'null))
+(define songRequest (make-request "current_song" 'null))
+(define stateRequest (make-request "player_state" 'null))
 
 (define-values (in out) (tcp-connect "localhost" 8069))
-(display playRequest out)
+(display stateRequest out)
 (flush-output out)
 (close-output-port out)
 (read-json in)

@@ -186,7 +186,6 @@ void load_stations_from_config() {
 // ----------------------------------------------------------------------------
 // Public Stuff
 // ----------------------------------------------------------------------------
-
 void init_stations() {
     stations = malloc(sizeof(StationTable) * 1);
     stations->items = malloc(sizeof(TableItem*) * TABLE_SIZE);
