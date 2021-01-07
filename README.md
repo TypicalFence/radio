@@ -9,3 +9,5 @@ It's a little silly tbh.
 
 - radiod
     - The code for the daemon itself
+- radioctl
+    - A cli for controlling the daemon
